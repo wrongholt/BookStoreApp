@@ -9,4 +9,9 @@
     <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>
     <string name="editor_activity_title_new_book">Add a Book</string>
+    <string name="IllegalArgumentExceptionForProductName">The product requires a name</string>
+    <string name="IllegalArgumentExceptionForProductPrice">Please enter a price for the product</string>
+    <string name="IllegalArgumentExceptionForProductQuantity">How did you break it!</string>
+    <string name="IllegalArgumentExceptionForSupplierName">The product needs a supplier</string>
+    <string name="IllegalArgumentExceptionForSupplierPhone">The supplier needs a phone number</string>
 </resources>
