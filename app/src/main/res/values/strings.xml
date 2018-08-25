@@ -14,4 +14,6 @@
     <string name="IllegalArgumentExceptionForProductQuantity">How did you break it!</string>
     <string name="IllegalArgumentExceptionForSupplierName">The product needs a supplier</string>
     <string name="IllegalArgumentExceptionForSupplierPhone">The supplier needs a phone number</string>
+    <string name="empty_view_title_text">It\'s a bit dusty in here &#8329;</string>
+    <string name="empty_view_subtitle_text">Get started by your first book!</string>
 </resources>

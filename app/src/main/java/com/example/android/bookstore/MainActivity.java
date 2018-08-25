@@ -1,13 +1,22 @@
 package com.example.android.bookstore;
 
+import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.android.bookstore.data.BookContract.BookEntry;
@@ -16,10 +25,11 @@ import com.example.android.bookstore.data.BookDbHelper;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private BookDbHelper mDbHelper;
-
+    private static final int BOOK_LOADER = 0;
+BookCursorAdapter mCursorAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +42,28 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        mDbHelper = new BookDbHelper(this);
+        ListView bookListView = (ListView) findViewById(R.id.list);
+
+        View emptyView = findViewById(R.id.empty_view);
+        bookListView.setEmptyView(emptyView);
+
+        mCursorAdapter = new BookCursorAdapter(this, null);
+        bookListView.setAdapter(mCursorAdapter);
+
+        bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, EditActivity.class);
+
+                Uri currentPetUri = ContentUris.withAppendedId(BookEntry.CONTENT_URI, id);
+
+                intent.setData(currentPetUri);
+
+                startActivity(intent);
+            }
+        });
+
+        getLoaderManager().initLoader(BOOK_LOADER, null, this);
     }
 
     @Override
@@ -118,8 +149,37 @@ public class MainActivity extends AppCompatActivity {
         values.put(BookEntry.COLUMN_SUPPLIER_NAME, "Johnson Books");
         values.put(BookEntry.COLUMN_SUPPLIER_PHONE, "555-555-5555");
 
-        long newRowId = db.insert(BookEntry.TABLE_NAME, null, values);
+        Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
     }
 
 
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, @Nullable Bundle bundle) {
+        String[] projection = {
+                BookEntry._ID,
+                BookEntry.COLUMN_PRODUCT_NAME,
+                BookEntry.COLUMN_PRODUCT_PRICE,
+                BookEntry.COLUMN_PRODUCT_QUANTITY,
+                BookEntry.COLUMN_SUPPLIER_NAME,
+                BookEntry.COLUMN_SUPPLIER_PHONE};
+
+
+        return new CursorLoader(this,
+                BookEntry.CONTENT_URI,
+                projection,
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
+        mCursorAdapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        mCursorAdapter.swapCursor(null);
+    }
 }
