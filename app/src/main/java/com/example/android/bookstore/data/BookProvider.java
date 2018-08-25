@@ -4,30 +4,31 @@ import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
-import com.example.android.bookstore.R;
 import com.example.android.bookstore.data.BookContract.BookEntry;
 
-public class BookProvider extends ContentProvider{
+public class BookProvider extends ContentProvider {
+
     public static final String LOG_TAG = BookProvider.class.getSimpleName();
     private BookDbHelper mDbHelper;
-private static final int BOOKS = 100;
-private static final int BOOK_ID = 101;
-private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-static {
-    sUriMatcher.addURI(BookContract.CONTENT_AUTHORITY, BookContract.PATH_BOOKS,BOOKS );
-    sUriMatcher.addURI(BookContract.CONTENT_AUTHORITY, BookContract.PATH_BOOKS + "/#",BOOK_ID );
-}
-private static final String ERROR_PRODCUT_NAME = Resources.getSystem().getString(R.string.IllegalArgumentExceptionForProductName);
-private static final String ERROR_PRODCUT_QUANTITY = Resources.getSystem().getString(R.string.IllegalArgumentExceptionForProductQuantity);
-private static final String ERROR_PRODCUT_PRICE = Resources.getSystem().getString(R.string.IllegalArgumentExceptionForProductPrice);
-private static final String ERROR_SUPPLIER_NAME = Resources.getSystem().getString(R.string.IllegalArgumentExceptionForSupplierName);
-private static final String ERROR_SUPPLIER_PHONE = Resources.getSystem().getString(R.string.IllegalArgumentExceptionForSupplierPhone);
+    private static final int BOOKS = 100;
+    private static final int BOOK_ID = 101;
+    private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+    static {
+        sUriMatcher.addURI(BookContract.CONTENT_AUTHORITY, BookContract.PATH_BOOKS, BOOKS);
+        sUriMatcher.addURI(BookContract.CONTENT_AUTHORITY, BookContract.PATH_BOOKS + "/#", BOOK_ID);
+    }
+
+    private final String ERROR_PRODUCT_NAME = "";
+    private final String ERROR_PRODUCT_QUANTITY = "";
+    private final String ERROR_PRODUCT_PRICE ="";
+    private final String ERROR_SUPPLIER_NAME = "";
+    private final String ERROR_SUPPLIER_PHONE = "";
 
     /**
      * Initialize the provider and the database helper object.
@@ -64,7 +65,8 @@ private static final String ERROR_SUPPLIER_PHONE = Resources.getSystem().getStri
         }
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
 
-        return cursor;    }
+        return cursor;
+    }
 
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
@@ -74,28 +76,30 @@ private static final String ERROR_SUPPLIER_PHONE = Resources.getSystem().getStri
                 return insertBook(uri, contentValues);
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
-        }    }
+        }
+    }
+
     private Uri insertBook(Uri uri, ContentValues values) {
         String name = values.getAsString(BookEntry.COLUMN_PRODUCT_NAME);
         if (name == null) {
-            throw new IllegalArgumentException(ERROR_PRODCUT_NAME);
+            throw new IllegalArgumentException("Please insert product name");
         }
         String supplierName = values.getAsString(BookEntry.COLUMN_SUPPLIER_NAME);
         if (supplierName == null) {
-            throw new IllegalArgumentException(ERROR_SUPPLIER_NAME);
+            throw new IllegalArgumentException("Enter valid Supplier");
         }
-        String supplierPhone = values.getAsString(BookEntry.COLUMN_SUPPLIER_NAME);
+        String supplierPhone = values.getAsString(BookEntry.COLUMN_SUPPLIER_PHONE);
         if (supplierPhone == null || !BookEntry.validatePhone(supplierPhone)) {
-            throw new IllegalArgumentException(ERROR_SUPPLIER_PHONE);
+            throw new IllegalArgumentException("incorrect numbers");
         }
         Integer price = values.getAsInteger(BookEntry.COLUMN_PRODUCT_PRICE);
         if (price == null) {
-            throw new IllegalArgumentException(ERROR_PRODCUT_PRICE);
+            throw new IllegalArgumentException("Invalid price");
         }
 
         Integer quantity = values.getAsInteger(BookEntry.COLUMN_PRODUCT_QUANTITY);
         if (quantity != null && quantity < 0) {
-            throw new IllegalArgumentException(ERROR_PRODCUT_QUANTITY);
+            throw new IllegalArgumentException("What?");
         }
 
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
@@ -130,31 +134,31 @@ private static final String ERROR_SUPPLIER_PHONE = Resources.getSystem().getStri
         if (values.containsKey(BookEntry.COLUMN_PRODUCT_NAME)) {
             String name = values.getAsString(BookEntry.COLUMN_PRODUCT_NAME);
             if (name == null) {
-                throw new IllegalArgumentException(ERROR_PRODCUT_NAME);
+                throw new IllegalArgumentException("name");
             }
         }
         if (values.containsKey(BookEntry.COLUMN_SUPPLIER_NAME)) {
             String supplierName = values.getAsString(BookEntry.COLUMN_SUPPLIER_NAME);
             if (supplierName == null) {
-                throw new IllegalArgumentException(ERROR_SUPPLIER_NAME);
+                throw new IllegalArgumentException("supplier");
             }
         }
         if (values.containsKey(BookEntry.COLUMN_SUPPLIER_PHONE)) {
             String supplierPhone = values.getAsString(BookEntry.COLUMN_SUPPLIER_PHONE);
             if (supplierPhone == null || !BookEntry.validatePhone(supplierPhone)) {
-                throw new IllegalArgumentException(ERROR_SUPPLIER_PHONE);
+                throw new IllegalArgumentException("phone");
             }
         }
         if (values.containsKey(BookEntry.COLUMN_PRODUCT_PRICE)) {
             Integer price = values.getAsInteger(BookEntry.COLUMN_PRODUCT_PRICE);
             if (price == null) {
-                throw new IllegalArgumentException(ERROR_PRODCUT_PRICE);
+                throw new IllegalArgumentException("price");
             }
         }
         if (values.containsKey(BookEntry.COLUMN_PRODUCT_QUANTITY)) {
             Integer quantity = values.getAsInteger(BookEntry.COLUMN_PRODUCT_QUANTITY);
             if (quantity != null && quantity < 0) {
-                throw new IllegalArgumentException(ERROR_PRODCUT_QUANTITY);
+                throw new IllegalArgumentException("quantity");
             }
         }
         if (values.size() == 0) {
@@ -169,6 +173,7 @@ private static final String ERROR_SUPPLIER_PHONE = Resources.getSystem().getStri
         }
         return rowsUpdated;
     }
+
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         int rowsDeleted;
@@ -204,5 +209,6 @@ private static final String ERROR_SUPPLIER_PHONE = Resources.getSystem().getStri
                 return BookEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
-        }    }
+        }
+    }
 }

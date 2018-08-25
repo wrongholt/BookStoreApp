@@ -9,10 +9,12 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.example.android.bookstore.data.BookContract.BookEntry;
+
 public class BookCursorAdapter extends CursorAdapter{
     public BookCursorAdapter(Context context, Cursor c) {
-        super(context, c);
+        super(context, c, 0 /* flags */);
     }
+
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
@@ -21,16 +23,18 @@ public class BookCursorAdapter extends CursorAdapter{
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView nameTextView =  view.findViewById(R.id.name);
-        TextView summaryTextView =  view.findViewById(R.id.summary);
+        TextView nameTextView = (TextView) view.findViewById(R.id.name);
+        TextView summaryTextView = (TextView) view.findViewById(R.id.summary);
 
-        int productNameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_NAME);
-        int supplierColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_SUPPLIER_NAME);
+        // Find the columns of pet attributes that we're interested in
+        int nameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_NAME);
+        int suuplierColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_SUPPLIER_NAME);
 
-        String productName = cursor.getString(productNameColumnIndex);
-        String supplierName = cursor.getString(supplierColumnIndex);
+        // Read the pet attributes from the Cursor for the current pet
+        String productName = cursor.getString(nameColumnIndex);
+        String supplierName = cursor.getString(suuplierColumnIndex);
 
+        // Update the TextViews with the attributes for the current pet
         nameTextView.setText(productName);
-        summaryTextView.setText(supplierName);
-    }
+        summaryTextView.setText(supplierName);    }
 }
