@@ -92,7 +92,7 @@ public class BookProvider extends ContentProvider {
         if (supplierPhone == null || !BookEntry.validatePhone(supplierPhone)) {
             throw new IllegalArgumentException("incorrect numbers");
         }
-        Integer price = values.getAsInteger(BookEntry.COLUMN_PRODUCT_PRICE);
+        String price = values.getAsString(BookEntry.COLUMN_PRODUCT_PRICE);
         if (price == null) {
             throw new IllegalArgumentException("Invalid price");
         }
@@ -150,7 +150,7 @@ public class BookProvider extends ContentProvider {
             }
         }
         if (values.containsKey(BookEntry.COLUMN_PRODUCT_PRICE)) {
-            Integer price = values.getAsInteger(BookEntry.COLUMN_PRODUCT_PRICE);
+            String price = values.getAsString(BookEntry.COLUMN_PRODUCT_PRICE);
             if (price == null) {
                 throw new IllegalArgumentException("price");
             }

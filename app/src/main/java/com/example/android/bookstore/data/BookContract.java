@@ -34,7 +34,7 @@ public final class BookContract {
             boolean check;
             Pattern pattern;
             Matcher matcher;
-            String phonePattern = "[0-9]{10}";
+            String phonePattern = "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$";
             pattern = Pattern.compile(phonePattern);
 
             matcher = pattern.matcher(phoneNumber);

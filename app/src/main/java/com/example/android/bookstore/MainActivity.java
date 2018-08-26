@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements
 
         ContentValues values = new ContentValues();
         values.put(BookEntry.COLUMN_PRODUCT_NAME, "Another Book");
-        values.put(BookEntry.COLUMN_PRODUCT_PRICE, 500);
+        values.put(BookEntry.COLUMN_PRODUCT_PRICE, "5.00");
         values.put(BookEntry.COLUMN_PRODUCT_QUANTITY, 3);
         values.put(BookEntry.COLUMN_SUPPLIER_NAME, "Johnson Books");
         values.put(BookEntry.COLUMN_SUPPLIER_PHONE, "555-555-5555");

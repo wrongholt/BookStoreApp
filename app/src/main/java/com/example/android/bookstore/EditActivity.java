@@ -12,15 +12,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
+import java.math.BigDecimal;
+
 import com.example.android.bookstore.data.BookContract.BookEntry;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class EditActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int EXISTING_BOOK_LOADER = 0;
@@ -29,17 +39,26 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
      * Content URI for the existing pet (null if it's a new pet)
      */
     private Uri mCurrentBookUri;
-    private EditText mNameEditText;
 
-    private EditText mPriceEditText;
+    @BindView(R.id.edit_name)
+    EditText mNameEditText;
+    @BindView(R.id.edit_price)
+    EditText mPriceEditText;
+    @BindView(R.id.edit_quantity)
+    EditText mQuantityEditText;
+    @BindView(R.id.edit_supplier_name)
+    EditText mSupplierNameEditText;
+    @BindView(R.id.edit_supplier_phone)
+    EditText mSupplierPhoneEditText;
+    @BindView(R.id.incrementQuantity)
+    Button mIncrementButton;
+    @BindView(R.id.decrementQuantity)
+    Button mDecrementButton;
 
-    private EditText mQuantityEditText;
-
-    private EditText mSupplierNameEditText;
-
-    private EditText mSupplierPhoneEditText;
+    public String quantityString;
+    public int quantity;
     private boolean mBookHasChanged = false;
-
+    private boolean emptyText = false;
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -70,39 +89,144 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         mQuantityEditText = findViewById(R.id.edit_quantity);
         mSupplierNameEditText = findViewById(R.id.edit_supplier_name);
         mSupplierPhoneEditText = findViewById(R.id.edit_supplier_phone);
+        mIncrementButton = findViewById(R.id.incrementQuantity);
+        mDecrementButton = findViewById(R.id.decrementQuantity);
+
 
         mNameEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);
         mSupplierNameEditText.setOnTouchListener(mTouchListener);
         mSupplierPhoneEditText.setOnTouchListener(mTouchListener);
+        mIncrementButton.setOnTouchListener(mTouchListener);
+        mDecrementButton.setOnTouchListener(mTouchListener);
+
+
+        mPriceEditText.addTextChangedListener(new TextWatcher() {
+            private String current = "";
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String string = s.toString();
+                if (string.isEmpty()) return;
+                mPriceEditText.removeTextChangedListener(this);
+                String cleanString = string.replaceAll("[$,.]", "");
+                BigDecimal parsed = new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
+                String formatted = NumberFormat.getCurrencyInstance().format(parsed);
+                mPriceEditText.setText(formatted);
+                mPriceEditText.setSelection(formatted.length());
+                mPriceEditText.addTextChangedListener(this);
+            }
+        });
+
+        mSupplierPhoneEditText.addTextChangedListener(new TextWatcher() {
+            private boolean backspacingFlag = false;
+            private boolean editedFlag = false;
+            private int cursorComplement;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                cursorComplement = s.length() - mSupplierPhoneEditText.getSelectionStart();
+                if (count > after) {
+                    backspacingFlag = true;
+                } else {
+                    backspacingFlag = false;
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String string = s.toString();
+                String phone = string.replaceAll("[^\\d]", "");
+
+                if (!editedFlag) {
+
+                    if (phone.length() >= 6 && !backspacingFlag) {
+                        editedFlag = true;
+                        String ans = "(" + phone.substring(0, 3) + ") " + phone.substring(3, 6) + "-" + phone.substring(6);
+                        mSupplierPhoneEditText.setText(ans);
+                        mSupplierPhoneEditText.setSelection(mSupplierPhoneEditText.getText().length() - cursorComplement);
+
+                    } else if (phone.length() >= 3 && !backspacingFlag) {
+                        editedFlag = true;
+                        String ans = "(" + phone.substring(0, 3) + ") " + phone.substring(3);
+                        mSupplierPhoneEditText.setText(ans);
+                        mSupplierPhoneEditText.setSelection(mSupplierPhoneEditText.getText().length() - cursorComplement);
+                    }
+                } else {
+                    editedFlag = false;
+                }
+            }
+        });
+
+        ButterKnife.bind(this);
+    }
+
+    @OnClick(R.id.incrementQuantity)
+    void onIncrementClicked() {
+        quantity = Integer.parseInt(mQuantityEditText.getText().toString().trim());
+        quantity += 1;
+        mQuantityEditText.setText("" + quantity);
+
+    }
+
+    @OnClick(R.id.decrementQuantity)
+    void onDecrementClicked() {
+        quantity = Integer.parseInt(mQuantityEditText.getText().toString().trim());
+        quantity -= 1;
+        if (quantity >= 0) {
+            mQuantityEditText.setText("" + quantity);
+        } else {
+            quantity = 0;
+        }
     }
 
     private void saveBook() {
+
         String nameString = mNameEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
-        int price = Integer.parseInt(priceString);
-        String quantityString = mQuantityEditText.getText().toString().trim();
-        int quantity = Integer.parseInt(quantityString);
         String supplierNameString = mSupplierNameEditText.getText().toString().trim();
         String supplierPhoneString = mSupplierPhoneEditText.getText().toString().trim();
 
-        // Check if this is supposed to be a new pet
-        // and check if all the fields in the editor are blank
+        quantityString = mQuantityEditText.getText().toString().trim();
+
+
+        if (mCurrentBookUri == null ||
+                TextUtils.isEmpty(nameString) || TextUtils.isEmpty(supplierNameString) ||
+                priceString.equals("") || quantityString.equals("") || TextUtils.isEmpty(supplierPhoneString)) {
+            emptyText = true;
+        }
         if (mCurrentBookUri == null &&
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(supplierNameString) &&
-                TextUtils.isEmpty(priceString) && TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(supplierPhoneString)) {
+                priceString.equals("") && quantityString.equals("") && TextUtils.isEmpty(supplierPhoneString)) {
             return;
         }
 
+        if (!TextUtils.isEmpty(quantityString)) {
+            quantity = Integer.parseInt(quantityString);
+        }
 
         ContentValues values = new ContentValues();
         values.put(BookEntry.COLUMN_PRODUCT_NAME, nameString);
-        values.put(BookEntry.COLUMN_PRODUCT_PRICE, price);
+        values.put(BookEntry.COLUMN_PRODUCT_PRICE, priceString);
         values.put(BookEntry.COLUMN_PRODUCT_QUANTITY, quantity);
         values.put(BookEntry.COLUMN_SUPPLIER_NAME, supplierNameString);
         values.put(BookEntry.COLUMN_SUPPLIER_PHONE, supplierPhoneString);
-        values.put(BookEntry.COLUMN_PRODUCT_PRICE, price);
 
         if (mCurrentBookUri == null) {
 
@@ -151,9 +275,25 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
+
                 saveBook();
-                finish();
-                return true;
+                if (emptyText == false) {
+                    finish();
+                    return true;
+                } else {
+                    emptyText = false;
+                    DialogInterface.OnClickListener discardButtonClickListener =
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    finish();
+                                }
+                            };
+
+                    showUnsavedChangesDialog(discardButtonClickListener);
+                    Toast.makeText(this, "please enter something in each box", Toast.LENGTH_LONG).show();
+                    return true;
+                }
             case R.id.action_delete:
                 showDeleteConfirmationDialog();
                 return true;
@@ -231,13 +371,13 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
             String name = cursor.getString(nameColumnIndex);
             String supplierName = cursor.getString(supplierNameColumnIndex);
             String supplierPhone = cursor.getString(supplierPhoneColumnIndex);
-            int price = cursor.getInt(priceColumnIndex);
+            String price = cursor.getString(priceColumnIndex);
             int quantity = cursor.getInt(quantityColumnIndex);
 
             mNameEditText.setText(name);
             mSupplierNameEditText.setText(supplierName);
             mSupplierPhoneEditText.setText(supplierPhone);
-            mPriceEditText.setText(Integer.toString(price));
+            mPriceEditText.setText(price);
             mQuantityEditText.setText(Integer.toString(quantity));
 
         }

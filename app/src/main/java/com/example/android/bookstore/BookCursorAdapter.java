@@ -23,16 +23,16 @@ public class BookCursorAdapter extends CursorAdapter{
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView nameTextView = (TextView) view.findViewById(R.id.name);
-        TextView summaryTextView = (TextView) view.findViewById(R.id.summary);
+        TextView nameTextView = view.findViewById(R.id.name);
+        TextView summaryTextView = view.findViewById(R.id.summary);
 
         // Find the columns of pet attributes that we're interested in
         int nameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_NAME);
-        int suuplierColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_SUPPLIER_NAME);
+        int supplierColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_SUPPLIER_NAME);
 
         // Read the pet attributes from the Cursor for the current pet
         String productName = cursor.getString(nameColumnIndex);
-        String supplierName = cursor.getString(suuplierColumnIndex);
+        String supplierName = cursor.getString(supplierColumnIndex);
 
         // Update the TextViews with the attributes for the current pet
         nameTextView.setText(productName);
