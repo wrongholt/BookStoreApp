@@ -54,5 +54,5 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/book" />
+        android:src="@drawable/book_black_36dp" />
 </RelativeLayout>

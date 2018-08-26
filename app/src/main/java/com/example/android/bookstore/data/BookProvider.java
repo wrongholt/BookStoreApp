@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
+import com.example.android.bookstore.R;
 import com.example.android.bookstore.data.BookContract.BookEntry;
 
 public class BookProvider extends ContentProvider {
@@ -134,31 +135,31 @@ public class BookProvider extends ContentProvider {
         if (values.containsKey(BookEntry.COLUMN_PRODUCT_NAME)) {
             String name = values.getAsString(BookEntry.COLUMN_PRODUCT_NAME);
             if (name == null) {
-                throw new IllegalArgumentException("name");
+                throw new IllegalArgumentException("The product requires a name");
             }
         }
         if (values.containsKey(BookEntry.COLUMN_SUPPLIER_NAME)) {
             String supplierName = values.getAsString(BookEntry.COLUMN_SUPPLIER_NAME);
             if (supplierName == null) {
-                throw new IllegalArgumentException("supplier");
+                throw new IllegalArgumentException("The product needs a supplier");
             }
         }
         if (values.containsKey(BookEntry.COLUMN_SUPPLIER_PHONE)) {
             String supplierPhone = values.getAsString(BookEntry.COLUMN_SUPPLIER_PHONE);
             if (supplierPhone == null || !BookEntry.validatePhone(supplierPhone)) {
-                throw new IllegalArgumentException("phone");
+                throw new IllegalArgumentException("The supplier needs a phone number");
             }
         }
         if (values.containsKey(BookEntry.COLUMN_PRODUCT_PRICE)) {
             String price = values.getAsString(BookEntry.COLUMN_PRODUCT_PRICE);
             if (price == null) {
-                throw new IllegalArgumentException("price");
+                throw new IllegalArgumentException("Please enter a price for the product");
             }
         }
         if (values.containsKey(BookEntry.COLUMN_PRODUCT_QUANTITY)) {
             Integer quantity = values.getAsInteger(BookEntry.COLUMN_PRODUCT_QUANTITY);
             if (quantity != null && quantity < 0) {
-                throw new IllegalArgumentException("quantity");
+                throw new IllegalArgumentException("How did you break it!");
             }
         }
         if (values.size() == 0) {

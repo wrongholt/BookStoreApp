@@ -1,5 +1,6 @@
 package com.example.android.bookstore;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
@@ -27,6 +28,13 @@ import java.text.NumberFormat;
 import java.math.BigDecimal;
 
 import com.example.android.bookstore.data.BookContract.BookEntry;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,16 +82,6 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_edit);
         Intent intent = getIntent();
         mCurrentBookUri = intent.getData();
-
-        if (mCurrentBookUri == null) {
-            setTitle(getString(R.string.editor_activity_title_new_book));
-
-            invalidateOptionsMenu();
-        } else {
-            setTitle(getString(R.string.editor_activity_title_edit_book));
-
-            getLoaderManager().initLoader(EXISTING_BOOK_LOADER, null, this);
-        }
         mNameEditText = findViewById(R.id.edit_name);
         mPriceEditText = findViewById(R.id.edit_price);
         mQuantityEditText = findViewById(R.id.edit_quantity);
@@ -91,6 +89,16 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         mSupplierPhoneEditText = findViewById(R.id.edit_supplier_phone);
         mIncrementButton = findViewById(R.id.incrementQuantity);
         mDecrementButton = findViewById(R.id.decrementQuantity);
+
+        if (mCurrentBookUri == null) {
+            setTitle(getString(R.string.editor_activity_title_new_book));
+            mSupplierPhoneEditText.setEnabled(true);
+            invalidateOptionsMenu();
+        } else {
+            setTitle(getString(R.string.editor_activity_title_edit_book));
+            mSupplierPhoneEditText.setEnabled(false);
+            getLoaderManager().initLoader(EXISTING_BOOK_LOADER, null, this);
+        }
 
 
         mNameEditText.setOnTouchListener(mTouchListener);
@@ -177,6 +185,19 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         ButterKnife.bind(this);
     }
 
+    @OnClick(R.id.callSupplier)
+    void onCallClicked() {
+
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(mSupplierPhoneEditText.getText().toString()));
+        startActivity(intent);
+
+    }
+
+    @OnClick(R.id.edit_the_number)
+    void onEditTheNumberClick() {
+        mSupplierPhoneEditText.setEnabled(true);
+    }
+
     @OnClick(R.id.incrementQuantity)
     void onIncrementClicked() {
         quantity = Integer.parseInt(mQuantityEditText.getText().toString().trim());
@@ -206,8 +227,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         quantityString = mQuantityEditText.getText().toString().trim();
 
 
-        if (mCurrentBookUri == null ||
-                TextUtils.isEmpty(nameString) || TextUtils.isEmpty(supplierNameString) ||
+        if (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(supplierNameString) ||
                 priceString.equals("") || quantityString.equals("") || TextUtils.isEmpty(supplierPhoneString)) {
             emptyText = true;
         }
@@ -291,7 +311,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
                             };
 
                     showUnsavedChangesDialog(discardButtonClickListener);
-                    Toast.makeText(this, "please enter something in each box", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getText(R.string.editor_black_entry), Toast.LENGTH_LONG).show();
                     return true;
                 }
             case R.id.action_delete:

@@ -79,7 +79,8 @@ public class MainActivity extends AppCompatActivity implements
         String[] projection = {
                 BookEntry._ID,
                 BookEntry.COLUMN_PRODUCT_NAME,
-                BookEntry.COLUMN_SUPPLIER_NAME};
+                BookEntry.COLUMN_PRODUCT_QUANTITY,
+                BookEntry.COLUMN_SUPPLIER_PHONE};
 
 
         return new CursorLoader(this,
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements
                 projection,
                 null,
                 null,
-                null);
+                BookEntry.COLUMN_PRODUCT_QUANTITY);
     }
 
     @Override

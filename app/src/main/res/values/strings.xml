@@ -10,11 +10,6 @@
     <string name="action_delete">Delete</string>
     <string name="editor_activity_title_new_book">Add a Book</string>
     <string name="editor_activity_title_edit_book">Edit Book</string>
-    <string name="IllegalArgumentExceptionForProductName">The product requires a name</string>
-    <string name="IllegalArgumentExceptionForProductPrice">Please enter a price for the product</string>
-    <string name="IllegalArgumentExceptionForProductQuantity">How did you break it!</string>
-    <string name="IllegalArgumentExceptionForSupplierName">The product needs a supplier</string>
-    <string name="IllegalArgumentExceptionForSupplierPhone">The supplier needs a phone number</string>
     <string name="empty_view_title_text">It\'s a bit dusty in here &#8329;</string>
     <string name="empty_view_subtitle_text">Get started by your first book!</string>
     <string name="editor_insert_book_successful">Book saved</string>
@@ -29,5 +24,8 @@
     <string name="cancel">Cancel</string>
     <string name="editor_delete_book_successful">Book deleted</string>
     <string name="editor_delete_book_failed">Error with deleting book</string>
+    <string name="editor_black_entry">Please enter something in each box</string>
+    <string name="quantity_main_activity">Quantity: %1$s</string>
+    <string name="supplier_phone">Suppliers Phone Number</string>
 
 </resources>
