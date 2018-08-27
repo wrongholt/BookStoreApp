@@ -8,6 +8,7 @@
     <string name="hint_supplier_phone">Supplier Phone</string>
     <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>
+    <string name="action_edit">Edit Details</string>
     <string name="editor_activity_title_new_book">Add a Book</string>
     <string name="editor_activity_title_edit_book">Edit Book</string>
     <string name="empty_view_title_text">It\'s a bit dusty in here &#8230;</string>
@@ -29,5 +30,6 @@
     <string name="price_main_activity">Price Per Book: %1$s</string>
     <string name="supplier_phone">Suppliers Phone Number</string>
     <string name="sold">Sold a Book</string>
+    <string name="error_phone">Phone number must be formatted like this: (***)***-**** </string>
 
 </resources>

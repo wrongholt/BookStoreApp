@@ -95,10 +95,18 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         if (mCurrentBookUri == null) {
             setTitle(getString(R.string.editor_activity_title_new_book));
             mSupplierPhoneEditText.setEnabled(true);
+            mPriceEditText.setEnabled(true);
+            mQuantityEditText.setEnabled(true);
+            mSupplierNameEditText.setEnabled(true);
+            mNameEditText.setEnabled(true);
             invalidateOptionsMenu();
         } else {
             setTitle(getString(R.string.editor_activity_title_edit_book));
             mSupplierPhoneEditText.setEnabled(false);
+            mPriceEditText.setEnabled(false);
+            mQuantityEditText.setEnabled(false);
+            mSupplierNameEditText.setEnabled(false);
+            mNameEditText.setEnabled(false);
             getLoaderManager().initLoader(EXISTING_BOOK_LOADER, null, this);
         }
 
@@ -197,45 +205,30 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    @OnClick(R.id.edit_the_number)
-    void onEditTheNumberClick() {
-        if (mSupplierPhoneEditText.isEnabled()) {
-            mSupplierPhoneEditText.setEnabled(false);
-        } else {
-            mSupplierPhoneEditText.setEnabled(true);
-        }
 
-    }
 
     @OnClick(R.id.incrementQuantity)
     void onIncrementClicked() {
-        quantity = Integer.parseInt(mQuantityEditText.getText().toString().trim());
-        quantity += 1;
-        mQuantityEditText.setText("" + quantity);
-
+        if (!TextUtils.isEmpty(quantityString)) {
+            quantity = Integer.parseInt(mQuantityEditText.getText().toString().trim());
+            quantity += 1;
+            mQuantityEditText.setText("" + quantity);
+        }
     }
 
     @OnClick(R.id.decrementQuantity)
     void onDecrementClicked() {
-        quantity = Integer.parseInt(mQuantityEditText.getText().toString().trim());
-        quantity -= 1;
-        if (quantity >= 0) {
-            mQuantityEditText.setText("" + quantity);
-        } else {
-            quantity = 0;
+        if (!TextUtils.isEmpty(quantityString)) {
+            quantity = Integer.parseInt(mQuantityEditText.getText().toString().trim());
+            quantity -= 1;
+            if (quantity >= 0) {
+                mQuantityEditText.setText("" + quantity);
+            } else {
+                quantity = 0;
+            }
         }
     }
 
-    @OnClick(R.id.shoppingCart)
-    void onSellClicked() {
-        quantity = Integer.parseInt(mQuantityEditText.getText().toString().trim());
-        quantity -= 1;
-        if (quantity >= 0) {
-            mQuantityEditText.setText("" + quantity);
-        } else {
-            quantity = 0;
-        }
-    }
 
     private void saveBook() {
 
@@ -249,7 +242,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
 
         if (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(supplierNameString) ||
                 priceString.equals("") || quantityString.equals("") || TextUtils.isEmpty(supplierPhoneString)) {
-            emptyText = true;
+           return;
         }
         if (mCurrentBookUri == null &&
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(supplierNameString) &&
@@ -352,6 +345,9 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
                         };
 
                 showUnsavedChangesDialog(discardButtonClickListener);
+                return true;
+            case R.id.edit:
+                onEditClick();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -470,6 +466,24 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         alertDialog.show();
     }
 
+    public void onEditClick() {
+
+
+        if (mSupplierPhoneEditText.isEnabled()) {
+            mSupplierPhoneEditText.setEnabled(false);
+            mPriceEditText.setEnabled(false);
+            mQuantityEditText.setEnabled(false);
+            mSupplierNameEditText.setEnabled(false);
+            mNameEditText.setEnabled(false);
+        } else {
+            mSupplierPhoneEditText.setEnabled(true);
+            mPriceEditText.setEnabled(true);
+            mQuantityEditText.setEnabled(true);
+            mSupplierNameEditText.setEnabled(true);
+            mNameEditText.setEnabled(true);
+        }
+
+    }
     private void deleteBook() {
         if (mCurrentBookUri != null) {
             int rowsDeleted = getContentResolver().delete(mCurrentBookUri, null, null);

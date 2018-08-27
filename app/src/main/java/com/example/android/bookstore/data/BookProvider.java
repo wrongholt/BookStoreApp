@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.android.bookstore.R;
 import com.example.android.bookstore.data.BookContract.BookEntry;
@@ -25,15 +26,6 @@ public class BookProvider extends ContentProvider {
         sUriMatcher.addURI(BookContract.CONTENT_AUTHORITY, BookContract.PATH_BOOKS + "/#", BOOK_ID);
     }
 
-    private final String ERROR_PRODUCT_NAME = "";
-    private final String ERROR_PRODUCT_QUANTITY = "";
-    private final String ERROR_PRODUCT_PRICE = "";
-    private final String ERROR_SUPPLIER_NAME = "";
-    private final String ERROR_SUPPLIER_PHONE = "";
-
-    /**
-     * Initialize the provider and the database helper object.
-     */
     @Override
     public boolean onCreate() {
         mDbHelper = new BookDbHelper(getContext());
@@ -147,7 +139,7 @@ public class BookProvider extends ContentProvider {
         if (values.containsKey(BookEntry.COLUMN_SUPPLIER_PHONE)) {
             String supplierPhone = values.getAsString(BookEntry.COLUMN_SUPPLIER_PHONE);
             if (supplierPhone == null || !BookEntry.validatePhone(supplierPhone)) {
-                throw new IllegalArgumentException("The supplier needs a phone number");
+                Toast.makeText(getContext(),R.string.error_phone , Toast.LENGTH_SHORT).show();
             }
         }
         if (values.containsKey(BookEntry.COLUMN_PRODUCT_PRICE)) {

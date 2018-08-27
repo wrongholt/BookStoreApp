@@ -81,25 +81,9 @@
             android:layout_marginLeft="@dimen/phone_edit_margin"
             android:layout_marginStart="@dimen/phone_edit_margin"
             android:background="@drawable/phone_black_36dp"
-
             />
 
-        <Button
-            android:id="@+id/edit_the_number"
-            android:layout_width="@dimen/button_size"
-            android:layout_height="@dimen/button_size"
-            android:layout_marginLeft="@dimen/phone_edit_margin"
-            android:layout_marginStart="@dimen/phone_edit_margin"
-            android:background="@drawable/edit_black_48dp" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/shoppingCart"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_size"
-        android:layout_margin="@dimen/phone_edit_margin"
-        android:background="@color/colorAccent"
-        android:gravity="center"
-        android:text="@string/sold" />
 </LinearLayout>
 
