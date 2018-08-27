@@ -26,6 +26,8 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import butterknife.OnClick;
+
 public class BookCursorAdapter extends CursorAdapter{
     public BookCursorAdapter(Context context, Cursor c) {
         super(context, c, 0 /* flags */);
@@ -41,23 +43,25 @@ public class BookCursorAdapter extends CursorAdapter{
     public void bindView(View view, Context context, Cursor cursor) {
         TextView nameTextView = view.findViewById(R.id.name);
         TextView summaryTextView = view.findViewById(R.id.summary);
-        TextView phoneTextView = view.findViewById(R.id.supplierPhone);
+        TextView priceTextView = view.findViewById(R.id.price);
 
         int nameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_NAME);
         int quantityColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_QUANTITY);
-        int supplierPhoneColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_SUPPLIER_PHONE);
+        int priceColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_PRICE);
 
         String productName = cursor.getString(nameColumnIndex);
         String quantity = cursor.getString(quantityColumnIndex);
-        String supplierPhone = cursor.getString(supplierPhoneColumnIndex);
+        String price = cursor.getString(priceColumnIndex);
 
         String compoundQuantityString = context.getString(R.string.quantity_main_activity, quantity);
+        String compoundPriceString = context.getString(R.string.price_main_activity, price);
 
         nameTextView.setText(productName);
         summaryTextView.setText(compoundQuantityString);
-        phoneTextView.setText(supplierPhone);
-
-
-
+        priceTextView.setText(compoundPriceString);
     }
+
+
 }
+
+

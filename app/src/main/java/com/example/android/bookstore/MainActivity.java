@@ -11,11 +11,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.android.bookstore.data.BookContract.BookEntry;
+
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>{
@@ -48,10 +53,8 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, EditActivity.class);
-
-                Uri currentPetUri = ContentUris.withAppendedId(BookEntry.CONTENT_URI, id);
-
-                intent.setData(currentPetUri);
+                Uri currentBookUri = ContentUris.withAppendedId(BookEntry.CONTENT_URI, id);
+                intent.setData(currentBookUri);
 
                 startActivity(intent);
             }
@@ -61,26 +64,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private void insertBook() {
-
-        ContentValues values = new ContentValues();
-        values.put(BookEntry.COLUMN_PRODUCT_NAME, "Another Book");
-        values.put(BookEntry.COLUMN_PRODUCT_PRICE, "5.00");
-        values.put(BookEntry.COLUMN_PRODUCT_QUANTITY, 3);
-        values.put(BookEntry.COLUMN_SUPPLIER_NAME, "Johnson Books");
-        values.put(BookEntry.COLUMN_SUPPLIER_PHONE, "555-555-5555");
-
-        Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
-    }
-
-
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         String[] projection = {
                 BookEntry._ID,
                 BookEntry.COLUMN_PRODUCT_NAME,
                 BookEntry.COLUMN_PRODUCT_QUANTITY,
-                BookEntry.COLUMN_SUPPLIER_PHONE};
+                BookEntry.COLUMN_PRODUCT_PRICE};
 
 
         return new CursorLoader(this,

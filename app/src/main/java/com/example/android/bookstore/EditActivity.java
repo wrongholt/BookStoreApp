@@ -8,10 +8,13 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -40,14 +43,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.content.Intent.ACTION_NEW_OUTGOING_CALL;
+
 public class EditActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int EXISTING_BOOK_LOADER = 0;
 
-    /**
-     * Content URI for the existing pet (null if it's a new pet)
-     */
     private Uri mCurrentBookUri;
-
+    private static final int PERMISSION_REQUEST_PHONE = 0;
     @BindView(R.id.edit_name)
     EditText mNameEditText;
     @BindView(R.id.edit_price)
@@ -100,7 +102,6 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
             getLoaderManager().initLoader(EXISTING_BOOK_LOADER, null, this);
         }
 
-
         mNameEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);
@@ -109,10 +110,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         mIncrementButton.setOnTouchListener(mTouchListener);
         mDecrementButton.setOnTouchListener(mTouchListener);
 
-
         mPriceEditText.addTextChangedListener(new TextWatcher() {
-            private String current = "";
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -187,15 +185,26 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @OnClick(R.id.callSupplier)
     void onCallClicked() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CALL_PHONE},
+                    PERMISSION_REQUEST_PHONE);
 
-        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(mSupplierPhoneEditText.getText().toString()));
-        startActivity(intent);
+        }else {
+            startActivity( new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mSupplierPhoneEditText.getText().toString())));
+        }
 
     }
 
     @OnClick(R.id.edit_the_number)
     void onEditTheNumberClick() {
-        mSupplierPhoneEditText.setEnabled(true);
+        if(mSupplierPhoneEditText.isEnabled()){
+            mSupplierPhoneEditText.setEnabled(false);
+        }else{
+            mSupplierPhoneEditText.setEnabled(true);
+        }
+
     }
 
     @OnClick(R.id.incrementQuantity)
@@ -216,7 +225,16 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
             quantity = 0;
         }
     }
-
+    @OnClick(R.id.shoppingCart)
+    void onSellClicked() {
+        quantity = Integer.parseInt(mQuantityEditText.getText().toString().trim());
+        quantity -= 1;
+        if (quantity >= 0) {
+            mQuantityEditText.setText("" + quantity);
+        } else {
+            quantity = 0;
+        }
+    }
     private void saveBook() {
 
         String nameString = mNameEditText.getText().toString().trim();
@@ -435,7 +453,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         builder.setMessage(R.string.delete_dialog_msg);
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                deletePet();
+                deleteBook();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -450,7 +468,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         alertDialog.show();
     }
 
-    private void deletePet() {
+    private void deleteBook() {
         if (mCurrentBookUri != null) {
             int rowsDeleted = getContentResolver().delete(mCurrentBookUri, null, null);
             if (rowsDeleted == 0) {

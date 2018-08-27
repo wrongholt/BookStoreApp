@@ -26,6 +26,8 @@
     <string name="editor_delete_book_failed">Error with deleting book</string>
     <string name="editor_black_entry">Please enter something in each box</string>
     <string name="quantity_main_activity">Quantity: %1$s</string>
+    <string name="price_main_activity">Price Per Book: %1$s</string>
     <string name="supplier_phone">Suppliers Phone Number</string>
+    <string name="sold">Sold a Book</string>
 
 </resources>
