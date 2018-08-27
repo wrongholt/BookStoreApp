@@ -28,7 +28,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 
 import butterknife.OnClick;
 
-public class BookCursorAdapter extends CursorAdapter{
+public class BookCursorAdapter extends CursorAdapter {
     public BookCursorAdapter(Context context, Cursor c) {
         super(context, c, 0 /* flags */);
     }

@@ -23,7 +23,7 @@ import com.example.android.bookstore.data.BookContract.BookEntry;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor>{
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int BOOK_LOADER = 0;
     BookCursorAdapter mCursorAdapter;

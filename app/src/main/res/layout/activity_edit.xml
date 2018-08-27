@@ -97,9 +97,9 @@
         android:id="@+id/shoppingCart"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_size"
+        android:layout_margin="@dimen/phone_edit_margin"
         android:background="@color/colorAccent"
         android:gravity="center"
-        android:layout_margin="@dimen/phone_edit_margin"
         android:text="@string/sold" />
 </LinearLayout>
 

@@ -27,7 +27,7 @@ public class BookProvider extends ContentProvider {
 
     private final String ERROR_PRODUCT_NAME = "";
     private final String ERROR_PRODUCT_QUANTITY = "";
-    private final String ERROR_PRODUCT_PRICE ="";
+    private final String ERROR_PRODUCT_PRICE = "";
     private final String ERROR_SUPPLIER_NAME = "";
     private final String ERROR_SUPPLIER_PHONE = "";
 

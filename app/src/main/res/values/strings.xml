@@ -10,7 +10,7 @@
     <string name="action_delete">Delete</string>
     <string name="editor_activity_title_new_book">Add a Book</string>
     <string name="editor_activity_title_edit_book">Edit Book</string>
-    <string name="empty_view_title_text">It\'s a bit dusty in here &#8329;</string>
+    <string name="empty_view_title_text">It\'s a bit dusty in here &#8230;</string>
     <string name="empty_view_subtitle_text">Get started by your first book!</string>
     <string name="editor_insert_book_successful">Book saved</string>
     <string name="editor_insert_book_failed">Error with saving book</string>

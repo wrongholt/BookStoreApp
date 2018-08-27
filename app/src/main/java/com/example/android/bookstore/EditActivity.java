@@ -191,17 +191,17 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
                     new String[]{Manifest.permission.CALL_PHONE},
                     PERMISSION_REQUEST_PHONE);
 
-        }else {
-            startActivity( new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mSupplierPhoneEditText.getText().toString())));
+        } else {
+            startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mSupplierPhoneEditText.getText().toString())));
         }
 
     }
 
     @OnClick(R.id.edit_the_number)
     void onEditTheNumberClick() {
-        if(mSupplierPhoneEditText.isEnabled()){
+        if (mSupplierPhoneEditText.isEnabled()) {
             mSupplierPhoneEditText.setEnabled(false);
-        }else{
+        } else {
             mSupplierPhoneEditText.setEnabled(true);
         }
 
@@ -225,6 +225,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
             quantity = 0;
         }
     }
+
     @OnClick(R.id.shoppingCart)
     void onSellClicked() {
         quantity = Integer.parseInt(mQuantityEditText.getText().toString().trim());
@@ -235,6 +236,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
             quantity = 0;
         }
     }
+
     private void saveBook() {
 
         String nameString = mNameEditText.getText().toString().trim();
