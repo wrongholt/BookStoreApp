@@ -139,7 +139,7 @@ public class BookProvider extends ContentProvider {
         if (values.containsKey(BookEntry.COLUMN_SUPPLIER_PHONE)) {
             String supplierPhone = values.getAsString(BookEntry.COLUMN_SUPPLIER_PHONE);
             if (supplierPhone == null || !BookEntry.validatePhone(supplierPhone)) {
-                Toast.makeText(getContext(),R.string.error_phone , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.error_phone, Toast.LENGTH_SHORT).show();
             }
         }
         if (values.containsKey(BookEntry.COLUMN_PRODUCT_PRICE)) {

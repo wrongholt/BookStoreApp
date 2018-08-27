@@ -1,36 +1,20 @@
 package com.example.android.bookstore;
 
-import android.Manifest;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.bookstore.data.BookContract.BookEntry;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
-import com.karumi.dexter.listener.single.PermissionListener;
-
-import butterknife.OnClick;
 
 public class BookCursorAdapter extends CursorAdapter {
     public BookCursorAdapter(Context context, Cursor c) {
@@ -67,11 +51,8 @@ public class BookCursorAdapter extends CursorAdapter {
         nameTextView.setText(productName);
         summaryTextView.setText(compoundQuantityString);
         priceTextView.setText(compoundPriceString);
-
-        final int newIntQuantity = Integer.parseInt(quantity);
-
-
-        nameTextView.setOnClickListener(new View.OnClickListener() {
+        RelativeLayout boxView = view.findViewById(R.id.box);
+        boxView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, EditActivity.class);
@@ -81,8 +62,6 @@ public class BookCursorAdapter extends CursorAdapter {
                 context.startActivity(intent);
             }
         });
-
-
 
         selectButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,10 +74,8 @@ public class BookCursorAdapter extends CursorAdapter {
 
                     values.put(BookEntry.COLUMN_PRODUCT_QUANTITY, newIntQuantity);
 
-                    newIntQuantity = context.getContentResolver().update(currentUri, values, null, null);
+                    context.getContentResolver().update(currentUri, values, null, null);
 
-                }else{
-                    newIntQuantity = 0;
                 }
             }
         });
