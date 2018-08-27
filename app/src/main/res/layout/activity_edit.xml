@@ -72,7 +72,8 @@
             android:hint="@string/hint_supplier_phone"
             android:inputType="phone"
             android:paddingEnd="@dimen/phone_edit_padding"
-            android:paddingRight="@dimen/phone_edit_padding" />
+            android:paddingRight="@dimen/phone_edit_padding"
+            android:maxLength="14"/>
 
         <Button
             android:id="@+id/callSupplier"
