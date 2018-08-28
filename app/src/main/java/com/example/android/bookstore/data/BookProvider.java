@@ -81,10 +81,7 @@ public class BookProvider extends ContentProvider {
         if (supplierName == null) {
             throw new IllegalArgumentException("Enter valid Supplier");
         }
-        String supplierPhone = values.getAsString(BookEntry.COLUMN_SUPPLIER_PHONE);
-        if (supplierPhone == null || !BookEntry.validatePhone(supplierPhone, getContext())) {
-            throw new IllegalArgumentException("incorrect numbers");
-        }
+
         String price = values.getAsString(BookEntry.COLUMN_PRODUCT_PRICE);
         if (price == null) {
             throw new IllegalArgumentException("Invalid price");
@@ -134,12 +131,6 @@ public class BookProvider extends ContentProvider {
             String supplierName = values.getAsString(BookEntry.COLUMN_SUPPLIER_NAME);
             if (supplierName == null) {
                 throw new IllegalArgumentException("The product needs a supplier");
-            }
-        }
-        if (values.containsKey(BookEntry.COLUMN_SUPPLIER_PHONE)) {
-            String supplierPhone = values.getAsString(BookEntry.COLUMN_SUPPLIER_PHONE);
-            if (supplierPhone == null || !BookEntry.validatePhone(supplierPhone, getContext())) {
-                Toast.makeText(getContext(), R.string.error_phone, Toast.LENGTH_SHORT).show();
             }
         }
         if (values.containsKey(BookEntry.COLUMN_PRODUCT_PRICE)) {

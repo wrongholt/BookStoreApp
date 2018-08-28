@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 
 import java.text.NumberFormat;
 import java.math.BigDecimal;
+import java.util.regex.Pattern;
 
 import com.example.android.bookstore.data.BookContract.BookEntry;
 import com.karumi.dexter.Dexter;
@@ -152,9 +154,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 cursorComplement = s.length() - mSupplierPhoneEditText.getSelectionStart();
                 if (count > after) {
-                    backspacingFlag = true;
-                } else {
-                    backspacingFlag = false;
+                    backspacingFlag = count > after;
                 }
             }
 
@@ -206,7 +206,6 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
-
     @OnClick(R.id.incrementQuantity)
     void onIncrementClicked() {
         if (!TextUtils.isEmpty(mQuantityEditText.getText().toString())) {
@@ -242,14 +241,10 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
 
         if (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(supplierNameString) ||
                 priceString.equals("") || quantityString.equals("") || TextUtils.isEmpty(supplierPhoneString)) {
-           Toast.makeText(EditActivity.this, R.string.error_empty,Toast.LENGTH_LONG ).show();
+            Toast.makeText(EditActivity.this, R.string.error_empty, Toast.LENGTH_LONG).show();
             return;
         }
-        if (mCurrentBookUri == null &&
-                TextUtils.isEmpty(nameString) && TextUtils.isEmpty(supplierNameString) &&
-                priceString.equals("") && quantityString.equals("") && TextUtils.isEmpty(supplierPhoneString)) {
-            return;
-        }
+
 
         if (!TextUtils.isEmpty(quantityString)) {
             quantity = Integer.parseInt(quantityString);
@@ -285,8 +280,47 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
                         Toast.LENGTH_SHORT).show();
             }
         }
-    }
+        if (!validatePhone(supplierPhoneString)) {
+            Toast.makeText(EditActivity.this, R.string.error_phone, Toast.LENGTH_LONG).show();
+        }else {
+            emptyTextCheck();
+        }
 
+    }
+public void emptyTextCheck(){
+    if (!emptyText) {
+        finish();
+    } else {
+        emptyText = false;
+        Toast.makeText(this, getText(R.string.editor_black_entry), Toast.LENGTH_LONG).show();
+        DialogInterface.OnClickListener discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        NavUtils.navigateUpFromSameTask(EditActivity.this);
+                    }
+                };
+
+        showUnsavedChangesDialog(discardButtonClickListener);
+    }
+}
+    public boolean validatePhone(String phoneNumber) {
+        if(!Pattern.matches("[a-zA-Z]+", phoneNumber))
+        {
+            if(phoneNumber.length() < 14 || phoneNumber.length() > 14)
+            {
+                return false;
+            }
+            else
+            {
+                return android.util.Patterns.PHONE.matcher(phoneNumber).matches();
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -309,25 +343,8 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-
                 saveBook();
-                if (emptyText == false) {
-                    finish();
-                    return true;
-                } else {
-                    emptyText = false;
-                    DialogInterface.OnClickListener discardButtonClickListener =
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    finish();
-                                }
-                            };
-
-                    showUnsavedChangesDialog(discardButtonClickListener);
-                    Toast.makeText(this, getText(R.string.editor_black_entry), Toast.LENGTH_LONG).show();
-                    return true;
-                }
+                return true;
             case R.id.action_delete:
                 showDeleteConfirmationDialog();
                 return true;
@@ -444,6 +461,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         });
 
         AlertDialog alertDialog = builder.create();
+        onPause();
         alertDialog.show();
     }
 
@@ -485,6 +503,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
     }
+
     private void deleteBook() {
         if (mCurrentBookUri != null) {
             int rowsDeleted = getContentResolver().delete(mCurrentBookUri, null, null);

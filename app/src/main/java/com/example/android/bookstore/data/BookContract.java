@@ -33,15 +33,7 @@ public final class BookContract {
         public final static String COLUMN_SUPPLIER_NAME = "supplier";
         public final static String COLUMN_SUPPLIER_PHONE = "phone";
 
-        public static boolean validatePhone(String phoneNumber, Context context) {
-            if(phoneNumber != null && phoneNumber.matches("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$")){
-                return true;
-            }else{
-                Toast.makeText(context, R.string.error_phone,Toast.LENGTH_LONG ).show();
-                return false;
-            }
 
-        }
 
     }
 }
