@@ -82,7 +82,7 @@ public class BookProvider extends ContentProvider {
             throw new IllegalArgumentException("Enter valid Supplier");
         }
         String supplierPhone = values.getAsString(BookEntry.COLUMN_SUPPLIER_PHONE);
-        if (supplierPhone == null || !BookEntry.validatePhone(supplierPhone)) {
+        if (supplierPhone == null || !BookEntry.validatePhone(supplierPhone, getContext())) {
             throw new IllegalArgumentException("incorrect numbers");
         }
         String price = values.getAsString(BookEntry.COLUMN_PRODUCT_PRICE);
@@ -91,7 +91,7 @@ public class BookProvider extends ContentProvider {
         }
 
         Integer quantity = values.getAsInteger(BookEntry.COLUMN_PRODUCT_QUANTITY);
-        if (quantity != null && quantity < 0) {
+        if (quantity == null && quantity < 0) {
             throw new IllegalArgumentException("What?");
         }
 
@@ -138,7 +138,7 @@ public class BookProvider extends ContentProvider {
         }
         if (values.containsKey(BookEntry.COLUMN_SUPPLIER_PHONE)) {
             String supplierPhone = values.getAsString(BookEntry.COLUMN_SUPPLIER_PHONE);
-            if (supplierPhone == null || !BookEntry.validatePhone(supplierPhone)) {
+            if (supplierPhone == null || !BookEntry.validatePhone(supplierPhone, getContext())) {
                 Toast.makeText(getContext(), R.string.error_phone, Toast.LENGTH_SHORT).show();
             }
         }

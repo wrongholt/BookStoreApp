@@ -1,8 +1,12 @@
 package com.example.android.bookstore.data;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.widget.Toast;
+
+import com.example.android.bookstore.R;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,16 +33,14 @@ public final class BookContract {
         public final static String COLUMN_SUPPLIER_NAME = "supplier";
         public final static String COLUMN_SUPPLIER_PHONE = "phone";
 
-        public static boolean validatePhone(String phoneNumber) {
-            boolean check;
-            Pattern pattern;
-            Matcher matcher;
-            String phonePattern = "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$";
-            pattern = Pattern.compile(phonePattern);
+        public static boolean validatePhone(String phoneNumber, Context context) {
+            if(phoneNumber != null && phoneNumber.matches("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$")){
+                return true;
+            }else{
+                Toast.makeText(context, R.string.error_phone,Toast.LENGTH_LONG ).show();
+                return false;
+            }
 
-            matcher = pattern.matcher(phoneNumber);
-            check = matcher.matches();
-            return check;
         }
 
     }

@@ -31,5 +31,6 @@
     <string name="supplier_phone">Suppliers Phone Number</string>
     <string name="sold">Sold a Book</string>
     <string name="error_phone">Phone number must be formatted like this: (***)***-**** </string>
+    <string name="error_empty">Please make sure everything is filled in.</string>
 
 </resources>

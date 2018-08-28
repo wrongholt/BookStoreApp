@@ -67,7 +67,7 @@ public class BookCursorAdapter extends CursorAdapter {
             @Override
             public void onClick(View v) {
                 int newIntQuantity = Integer.parseInt(quantity);
-                if (newIntQuantity >= 0) {
+                if (newIntQuantity > 0) {
                     ContentValues values = new ContentValues();
 
                     newIntQuantity -= 1;
@@ -76,7 +76,10 @@ public class BookCursorAdapter extends CursorAdapter {
 
                     context.getContentResolver().update(currentUri, values, null, null);
 
-                }
+                }else {
+                        newIntQuantity = 0;
+                    }
+
             }
         });
     }

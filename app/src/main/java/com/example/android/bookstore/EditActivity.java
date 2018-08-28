@@ -209,7 +209,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @OnClick(R.id.incrementQuantity)
     void onIncrementClicked() {
-        if (!TextUtils.isEmpty(quantityString)) {
+        if (!TextUtils.isEmpty(mQuantityEditText.getText().toString())) {
             quantity = Integer.parseInt(mQuantityEditText.getText().toString().trim());
             quantity += 1;
             mQuantityEditText.setText("" + quantity);
@@ -218,7 +218,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @OnClick(R.id.decrementQuantity)
     void onDecrementClicked() {
-        if (!TextUtils.isEmpty(quantityString)) {
+        if (!TextUtils.isEmpty(mQuantityEditText.getText().toString())) {
             quantity = Integer.parseInt(mQuantityEditText.getText().toString().trim());
             quantity -= 1;
             if (quantity >= 0) {
@@ -242,7 +242,8 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
 
         if (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(supplierNameString) ||
                 priceString.equals("") || quantityString.equals("") || TextUtils.isEmpty(supplierPhoneString)) {
-           return;
+           Toast.makeText(EditActivity.this, R.string.error_empty,Toast.LENGTH_LONG ).show();
+            return;
         }
         if (mCurrentBookUri == null &&
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(supplierNameString) &&
