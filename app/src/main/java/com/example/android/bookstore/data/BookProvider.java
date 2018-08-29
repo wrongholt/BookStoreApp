@@ -141,7 +141,7 @@ public class BookProvider extends ContentProvider {
         }
         if (values.containsKey(BookEntry.COLUMN_PRODUCT_QUANTITY)) {
             Integer quantity = values.getAsInteger(BookEntry.COLUMN_PRODUCT_QUANTITY);
-            if (quantity != null && quantity < 0) {
+            if (quantity == null && quantity < 0) {
                 throw new IllegalArgumentException("How did you break it!");
             }
         }

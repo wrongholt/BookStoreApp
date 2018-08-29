@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import java.text.NumberFormat;
 import java.math.BigDecimal;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import com.example.android.bookstore.data.BookContract.BookEntry;
@@ -136,9 +137,8 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
                 String string = s.toString();
                 if (string.isEmpty()) return;
                 mPriceEditText.removeTextChangedListener(this);
-                String cleanString = string.replaceAll("[$,.]", "");
-                BigDecimal parsed = new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
-                String formatted = NumberFormat.getCurrencyInstance().format(parsed);
+                BigDecimal parsed = new BigDecimal(string).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
+                String formatted = NumberFormat.getCurrencyInstance(Locale.getDefault()).format(parsed);
                 mPriceEditText.setText(formatted);
                 mPriceEditText.setSelection(formatted.length());
                 mPriceEditText.addTextChangedListener(this);
